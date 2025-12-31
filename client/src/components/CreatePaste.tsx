@@ -1,7 +1,18 @@
-import { useState } from 'react';
-import { generateKey, exportKey, encrypt } from '../utils/crypto';
+import { useState, useRef } from 'react';
+import { generateKey, exportKey, encrypt, encryptFile } from '../utils/crypto';
 import { createPaste } from '../utils/api';
 import RichTextEditor from './RichTextEditor';
+
+interface FileWithPreview {
+  file: File;
+  id: string;
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
 
 export default function CreatePaste() {
   const [content, setContent] = useState('<p></p>');
@@ -11,12 +22,41 @@ export default function CreatePaste() {
   const [error, setError] = useState('');
   const [shareUrl, setShareUrl] = useState('');
   const [copied, setCopied] = useState(false);
+  const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = e.target.files;
+    if (!selectedFiles) return;
+
+    const newFiles: FileWithPreview[] = [];
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const file = selectedFiles[i];
+      // Limit file size to 25MB
+      if (file.size > 25 * 1024 * 1024) {
+        setError(`File "${file.name}" is too large. Maximum size is 25MB.`);
+        continue;
+      }
+      newFiles.push({
+        file,
+        id: crypto.randomUUID(),
+      });
+    }
+
+    setFiles((prev) => [...prev, ...newFiles]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const removeFile = (id: string) => {
+    setFiles((prev) => prev.filter((f) => f.id !== id));
+  };
 
   const handleSubmit = async () => {
-    // Check if content is empty (just empty paragraph tags)
     const strippedContent = content.replace(/<[^>]*>/g, '').trim();
-    if (!strippedContent) {
-      setError('Please enter some content');
+    if (!strippedContent && files.length === 0) {
+      setError('Please enter some content or attach files');
       return;
     }
 
@@ -29,16 +69,23 @@ export default function CreatePaste() {
       const { ciphertext, iv } = await encrypt(content, key);
       const keyString = await exportKey(key);
 
+      // Encrypt all files
+      const encryptedAttachments = await Promise.all(
+        files.map((f) => encryptFile(f.file, key))
+      );
+
       const response = await createPaste({
         encryptedContent: ciphertext,
         iv,
         burnAfterReading,
         expiresIn: expiresIn === 'never' ? undefined : expiresIn,
+        attachments: encryptedAttachments,
       });
 
       const url = `${window.location.origin}/paste/${response.id}#${keyString}`;
       setShareUrl(url);
       setContent('<p></p>');
+      setFiles([]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create paste');
     } finally {
@@ -61,6 +108,7 @@ export default function CreatePaste() {
     setContent('<p></p>');
     setBurnAfterReading(false);
     setExpiresIn('1d');
+    setFiles([]);
   };
 
   if (shareUrl) {
@@ -105,6 +153,48 @@ export default function CreatePaste() {
         onChange={setContent}
         disabled={loading}
       />
+
+      {/* File Attachments */}
+      <div className="attachments-section">
+        <div className="attachments-header">
+          <label>Attachments</label>
+          <button
+            type="button"
+            className="btn btn-secondary attach-btn"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={loading}
+          >
+            + Add Files
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            onChange={handleFileSelect}
+            style={{ display: 'none' }}
+          />
+        </div>
+
+        {files.length > 0 && (
+          <div className="file-list">
+            {files.map((f) => (
+              <div key={f.id} className="file-item">
+                <span className="file-icon">📎</span>
+                <span className="file-name">{f.file.name}</span>
+                <span className="file-size">{formatFileSize(f.file.size)}</span>
+                <button
+                  type="button"
+                  className="file-remove"
+                  onClick={() => removeFile(f.id)}
+                  disabled={loading}
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       <div className="options">
         <div className="option-group">

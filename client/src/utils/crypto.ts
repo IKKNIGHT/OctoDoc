@@ -62,6 +62,72 @@ export async function decrypt(
   return decoder.decode(decrypted);
 }
 
+export async function encryptFile(
+  file: File,
+  key: CryptoKey
+): Promise<{ encryptedData: string; iv: string; encryptedFilename: string; filenameIv: string; fileSize: number }> {
+  const fileBuffer = await file.arrayBuffer();
+
+  // Encrypt file data
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const encryptedData = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    fileBuffer
+  );
+
+  // Encrypt filename
+  const filenameIv = crypto.getRandomValues(new Uint8Array(12));
+  const encoder = new TextEncoder();
+  const encryptedFilename = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv: filenameIv },
+    key,
+    encoder.encode(file.name)
+  );
+
+  return {
+    encryptedData: arrayBufferToBase64(encryptedData),
+    iv: arrayBufferToBase64(iv),
+    encryptedFilename: arrayBufferToBase64(encryptedFilename),
+    filenameIv: arrayBufferToBase64(filenameIv),
+    fileSize: file.size,
+  };
+}
+
+export async function decryptFile(
+  encryptedData: string,
+  iv: string,
+  encryptedFilename: string,
+  filenameIv: string,
+  key: CryptoKey
+): Promise<{ data: Blob; filename: string }> {
+  // Decrypt file data
+  const dataBuffer = base64ToArrayBuffer(encryptedData);
+  const ivBuffer = base64ToArrayBuffer(iv);
+  const decryptedData = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv: ivBuffer },
+    key,
+    dataBuffer
+  );
+
+  // Decrypt filename
+  const filenameBuffer = base64ToArrayBuffer(encryptedFilename);
+  const filenameIvBuffer = base64ToArrayBuffer(filenameIv);
+  const decryptedFilename = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv: filenameIvBuffer },
+    key,
+    filenameBuffer
+  );
+
+  const decoder = new TextDecoder();
+  const filename = decoder.decode(decryptedFilename);
+
+  return {
+    data: new Blob([decryptedData]),
+    filename,
+  };
+}
+
 function arrayBufferToBase64(buffer: ArrayBuffer | Uint8Array): string {
   const bytes = new Uint8Array(buffer);
   let binary = '';

@@ -581,3 +581,87 @@ body {
   border-radius: 2px;
   padding: 0.125rem 0;
 }
+
+/* File Attachments */
+.attachments-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.attachments-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.attachments-header label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.attach-btn {
+  padding: 0.375rem 0.75rem !important;
+  font-size: 0.8rem !important;
+}
+
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.625rem 0.875rem;
+}
+
+.file-icon {
+  font-size: 1rem;
+}
+
+.file-name {
+  flex: 1;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-size {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.file-remove {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.file-remove:hover {
+  color: var(--error);
+}
+
+.download-btn {
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.8rem !important;
+}
+
+.view-attachments {
+  margin-top: 1.5rem;
+}

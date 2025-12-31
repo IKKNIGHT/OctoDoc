@@ -1,10 +1,19 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
+export interface EncryptedAttachment {
+  encryptedData: string;
+  iv: string;
+  encryptedFilename: string;
+  filenameIv: string;
+  fileSize: number;
+}
+
 export interface CreatePasteRequest {
   encryptedContent: string;
   iv: string;
   burnAfterReading?: boolean;
   expiresIn?: string;
+  attachments?: EncryptedAttachment[];
 }
 
 export interface CreatePasteResponse {
@@ -15,6 +24,7 @@ export interface GetPasteResponse {
   encryptedContent: string;
   iv: string;
   burnAfterReading: boolean;
+  attachments: EncryptedAttachment[];
 }
 
 export async function createPaste(data: CreatePasteRequest): Promise<CreatePasteResponse> {
