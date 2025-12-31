@@ -1,0 +1,583 @@
+:root {
+  --bg-primary: #1a1a2e;
+  --bg-surface: #16213e;
+  --bg-input: #0f3460;
+  --accent: #e94560;
+  --accent-hover: #ff6b6b;
+  --text-primary: #eaeaea;
+  --text-muted: #8b8b8b;
+  --border: #2a2a4a;
+  --success: #4ade80;
+  --error: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'SF Mono', 'Fira Code', 'Monaco', monospace;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.card {
+  background-color: var(--bg-surface);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 300px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 1rem;
+  resize: vertical;
+  margin-bottom: 1rem;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.options {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.option-group label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.select {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.checkbox-group span {
+  font-size: 0.9rem;
+}
+
+.btn {
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--border);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.share-url {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-top: 1rem;
+  word-break: break-all;
+  font-size: 0.85rem;
+}
+
+.share-url-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.share-url-header span {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.share-url a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.share-url a:hover {
+  text-decoration: underline;
+}
+
+.message {
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.message.error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--error);
+  color: var(--error);
+}
+
+.message.success {
+  background-color: rgba(74, 222, 128, 0.1);
+  border: 1px solid var(--success);
+  color: var(--success);
+}
+
+.message.warning {
+  background-color: rgba(233, 69, 96, 0.1);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+}
+
+.paste-content {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.9rem;
+  min-height: 200px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.new-paste-link {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.new-paste-link a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.new-paste-link a:hover {
+  text-decoration: underline;
+}
+
+.copied {
+  color: var(--success) !important;
+}
+
+/* Rich Text Editor Styles */
+.rich-editor {
+  margin-bottom: 1rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  align-items: center;
+}
+
+.toolbar-group {
+  display: flex;
+  gap: 0.125rem;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--border);
+  margin: 0 0.375rem;
+}
+
+.toolbar button {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  padding: 0.375rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+  min-width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s;
+}
+
+.toolbar button:hover:not(:disabled) {
+  background-color: var(--border);
+}
+
+.toolbar button.active {
+  background-color: var(--accent);
+  color: white;
+}
+
+.toolbar button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Font & Size Selectors */
+.toolbar-select {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  height: 28px;
+}
+
+.toolbar-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.font-select {
+  width: 130px;
+}
+
+.size-select {
+  width: 70px;
+}
+
+.font-size-group {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.size-input {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  width: 60px;
+  height: 28px;
+}
+
+.size-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.size-input::placeholder {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+/* Color Picker */
+.color-picker {
+  position: relative;
+}
+
+.color-btn {
+  position: relative;
+}
+
+.color-indicator {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 3px;
+  border-radius: 1px;
+}
+
+.highlight-icon {
+  background-color: #feca57;
+  color: #1a1a2e;
+  padding: 0 4px;
+  border-radius: 2px;
+  font-size: 0.75rem;
+}
+
+.color-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.5rem;
+  z-index: 100;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+}
+
+.color-picker:hover .color-dropdown {
+  display: grid;
+}
+
+.color-swatch {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  padding: 0 !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 4px !important;
+  cursor: pointer;
+  font-size: 0.7rem;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+}
+
+/* Editor Content Area */
+.editor-content {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 0 0 6px 6px;
+  min-height: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.editor-content .tiptap {
+  padding: 1rem;
+  min-height: 250px;
+  outline: none;
+  color: var(--text-primary);
+}
+
+.editor-content .tiptap:focus {
+  outline: none;
+}
+
+.editor-content .tiptap p {
+  margin: 0 0 0.5rem 0;
+}
+
+.editor-content .tiptap h1 {
+  font-size: 1.75rem;
+  margin: 0 0 0.75rem 0;
+}
+
+.editor-content .tiptap h2 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.editor-content .tiptap h3 {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.editor-content .tiptap ul,
+.editor-content .tiptap ol {
+  padding-left: 1.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.editor-content .tiptap blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  margin: 0.5rem 0;
+  color: var(--text-muted);
+}
+
+.editor-content .tiptap pre {
+  background-color: var(--bg-primary);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+
+.editor-content .tiptap code {
+  background-color: var(--bg-primary);
+  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+.editor-content .tiptap pre code {
+  background: none;
+  padding: 0;
+}
+
+.editor-content .tiptap a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.editor-content .tiptap mark {
+  border-radius: 2px;
+  padding: 0.125rem 0;
+}
+
+/* Paste Content Styles (for viewing) */
+.paste-content h1 {
+  font-size: 1.75rem;
+  margin: 0 0 0.75rem 0;
+}
+
+.paste-content h2 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.paste-content h3 {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.paste-content p {
+  margin: 0 0 0.5rem 0;
+}
+
+.paste-content ul,
+.paste-content ol {
+  padding-left: 1.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.paste-content blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  margin: 0.5rem 0;
+  color: var(--text-muted);
+}
+
+.paste-content pre {
+  background-color: var(--bg-primary);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+
+.paste-content code {
+  background-color: var(--bg-primary);
+  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+.paste-content pre code {
+  background: none;
+  padding: 0;
+}
+
+.paste-content a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.paste-content mark {
+  border-radius: 2px;
+  padding: 0.125rem 0;
+}
